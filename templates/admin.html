@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-cover bg-center bg-no-repeat min-h-screen" style="background-image: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url('{{ url_for('static', filename='images/admin-dashboard.jpg') }}')">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div class="mb-8"><h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1><p class="text-gray-600 mt-2">Institutional overview and analytics</p></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500 hover-lift"><div class="flex items-center"><div class="bg-blue-100 p-3 rounded-lg mr-4"><i class="fas fa-users text-blue-600 text-xl"></i></div><div><p class="text-sm text-gray-600">Total Users</p><p class="text-2xl font-bold text-gray-900">{{ total_users }}</p></div></div></div>
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500 hover-lift"><div class="flex items-center"><div class="bg-green-100 p-3 rounded-lg mr-4"><i class="fas fa-user-graduate text-green-600 text-xl"></i></div><div><p class="text-sm text-gray-600">Students</p><p class="text-2xl font-bold text-gray-900">{{ total_students }}</p></div></div></div>
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500 hover-lift"><div class="flex items-center"><div class="bg-purple-100 p-3 rounded-lg mr-4"><i class="fas fa-chart-bar text-purple-600 text-xl"></i></div><div><p class="text-sm text-gray-600">Total Sessions</p><p class="text-2xl font-bold text-gray-900">{{ total_sessions }}</p></div></div></div>
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500 hover-lift"><div class="flex items-center"><div class="bg-yellow-100 p-3 rounded-lg mr-4"><i class="fas fa-heart text-yellow-600 text-xl"></i></div><div><p class="text-sm text-gray-600">Avg. Wellness</p><p class="text-2xl font-bold text-gray-900">72%</p></div></div></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 hover-lift"><h3 class="text-xl font-semibold text-gray-900 mb-4">Platform Analytics</h3><div class="h-80"><canvas id="adminAnalyticsChart"></canvas></div></div>
+            <div class="bg-white rounded-xl shadow-lg p-6 hover-lift"><h3 class="text-xl font-semibold text-gray-900 mb-4">Emotion Distribution</h3><div class="h-80"><canvas id="emotionDistributionChart"></canvas></div></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 hover-lift">
+                <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-semibold text-gray-900">Recent Activity</h3><button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition duration-300"><i class="fas fa-download mr-2"></i>Export</button></div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead><tr><th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Emotion</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th></tr></thead>
+                        <tbody class="divide-y divide-gray-200">
+                            {% for emotion in recent_emotions %}
+                            <tr class="hover:bg-gray-50"><td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">User {{ emotion.user_id[:8] }}...</td><td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500"><span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {% if emotion.emotion_type == 'face' %}bg-blue-100 text-blue-800{% elif emotion.emotion_type == 'voice' %}bg-green-100 text-green-800{% else %}bg-purple-100 text-purple-800{% endif %}">{{ emotion.emotion_type|title }}</span></td><td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{{ emotion.data.dominant_emotion|title }}</td><td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ emotion.timestamp.strftime('%H:%M') }}</td></tr>
+                            {% else %}
+                            <tr><td colspan="4" class="px-4 py-8 text-center text-gray-500"><i class="fas fa-inbox text-2xl mb-2"></i><p>No recent activity</p></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 hover-lift"><h3 class="text-xl font-semibold text-gray-900 mb-4">User Management</h3><div class="space-y-3">
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg transition duration-300 text-left"><i class="fas fa-user-plus mr-3"></i>Add New User</button>
+                    <button class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg transition duration-300 text-left"><i class="fas fa-file-export mr-3"></i>Generate Reports</button>
+                    <button class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-lg transition duration-300 text-left"><i class="fas fa-cog mr-3"></i>System Settings</button>
+                </div></div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 hover-lift"><h3 class="text-xl font-semibold text-gray-900 mb-4">System Health</h3><div class="space-y-4">
+                    <div><div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">Server Load</span><span class="text-sm font-medium text-green-600">45%</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-green-600 h-2 rounded-full" style="width: 45%"></div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">Database</span><span class="text-sm font-medium text-blue-600">Healthy</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-blue-600 h-2 rounded-full" style="width: 100%"></div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="text-sm font-medium text-gray-700">AI Services</span><span class="text-sm font-medium text-green-600">Operational</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-green-600 h-2 rounded-full" style="width: 100%"></div></div></div>
+                </div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const analyticsCtx = document.getElementById('adminAnalyticsChart').getContext('2d');
+        new Chart(analyticsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Active Users',
+                    data: [65, 78, 90, 81, 86, 55, 40],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4
+                }, {
+                    label: 'Sessions',
+                    data: [120, 145, 162, 138, 155, 110, 95],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        const emotionCtx = document.getElementById('emotionDistributionChart').getContext('2d');
+        new Chart(emotionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Happy', 'Neutral', 'Sad', 'Angry', 'Surprise'],
+                datasets: [{
+                    data: [35, 25, 15, 10, 15],
+                    backgroundColor: ['#10b981', '#6b7280', '#ef4444', '#f59e0b', '#8b5cf6']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    });
+</script>
+{% endblock %}

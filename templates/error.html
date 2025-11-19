@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full text-center">
+        <!-- Error Icon -->
+        <div class="mb-8">
+            <div class="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6">
+                {% if error_code == 404 %}
+                    <i class="fas fa-search text-red-600 text-3xl"></i>
+                {% elif error_code == 500 %}
+                    <i class="fas fa-cog text-red-600 text-3xl"></i>
+                {% elif error_code == 403 %}
+                    <i class="fas fa-ban text-red-600 text-3xl"></i>
+                {% else %}
+                    <i class="fas fa-exclamation-triangle text-red-600 text-3xl"></i>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="mb-8">
+            <h1 class="text-6xl font-bold text-gray-900 mb-4">{{ error_code }}</h1>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+                {% if error_code == 404 %}
+                    Page Not Found
+                {% elif error_code == 500 %}
+                    Server Error
+                {% elif error_code == 403 %}
+                    Access Denied
+                {% else %}
+                    Something Went Wrong
+                {% endif %}
+            </h2>
+            <p class="text-gray-600 mb-6">{{ error_message }}</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-4">
+            <a href="{{ url_for('auth.index') }}" 
+               class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-300 inline-block">
+                <i class="fas fa-home mr-2"></i>Go Home
+            </a>
+            <button onclick="history.back()" 
+                    class="w-full bg-gray-600 hover:bg-gray-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-300">
+                <i class="fas fa-arrow-left mr-2"></i>Go Back
+            </button>
+        </div>
+
+        <!-- Support Info -->
+        <div class="mt-8 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+            <div class="flex items-center justify-center">
+                <i class="fas fa-life-ring text-yellow-600 mr-3"></i>
+                <p class="text-sm text-yellow-800">Need help? Contact our support team</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

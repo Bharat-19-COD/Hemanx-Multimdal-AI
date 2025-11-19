@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section / Landing Page -->
+<section class="relative bg-cover bg-center bg-no-repeat min-h-screen flex items-center" 
+         style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{{ url_for('static', filename='images/image.png') }}')">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+        <h1 class="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
+            Empowering Emotional Intelligence Through Technology
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto">
+            HEMANX is an institutional-grade student wellness monitoring platform that uses advanced AI to analyze facial expressions, voice patterns, and text sentiment for comprehensive emotional well-being assessment.
+        </p>
+        <div class="space-x-4">
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.register') }}" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition duration-300 transform hover:scale-105">
+                   Get Started
+                </a>
+                <a href="{{ url_for('auth.login') }}" 
+                   class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition duration-300">
+                   Sign In
+                </a>
+            {% else %}
+                <a href="{{ url_for('dashboard.student') }}" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition duration-300 transform hover:scale-105">
+                   Go to Dashboard
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Multimodal Emotion Analysis Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Advanced Multimodal Emotion Analysis</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Our platform combines cutting-edge AI technologies to provide comprehensive emotional well-being insights.
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Facial Analysis Card -->
+            <div class="bg-blue-50 rounded-xl p-8 text-center hover-lift">
+                <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-camera text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-900 mb-4">Facial Expression Analysis</h3>
+                <p class="text-gray-600 mb-4">Real-time emotion detection using advanced computer vision and DeepFace technology.</p>
+                <ul class="text-left text-gray-600 space-y-2">
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>7 core emotions detection</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>Real-time webcam analysis</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>Privacy-focused processing</li>
+                </ul>
+            </div>
+
+            <!-- Voice Analysis Card -->
+            <div class="bg-green-50 rounded-xl p-8 text-center hover-lift">
+                <div class="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-microphone text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-900 mb-4">Voice Emotion Detection</h3>
+                <p class="text-gray-600 mb-4">Advanced audio processing using Librosa and machine learning models.</p>
+                <ul class="text-left text-gray-600 space-y-2">
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>8 emotional states analysis</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>Upload or record audio</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>Spectrogram analysis</li>
+                </ul>
+            </div>
+
+            <!-- Text Sentiment Card -->
+            <div class="bg-purple-50 rounded-xl p-8 text-center hover-lift">
+                <div class="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-comment text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-900 mb-4">Text Sentiment Analysis</h3>
+                <p class="text-gray-600 mb-4">Hugging Face Transformers for accurate sentiment and emotion classification.</p>
+                <ul class="text-left text-gray-600 space-y-2">
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>Positive/Negative sentiment</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>Emotion classification</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>Confidence scoring</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wellness Section -->
+<section class="py-20 bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-4xl font-bold mb-6">Personalized Wellness Journey</h2>
+                <p class="text-xl text-gray-300 mb-8">
+                    Our gamified wellness system provides personalized recommendations based on your emotional patterns.
+                </p>
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="bg-blue-600 rounded-full p-3 mr-4"><i class="fas fa-medal text-white text-xl"></i></div>
+                        <div><h3 class="text-xl font-semibold mb-2">Achievement System</h3><p class="text-gray-300">Earn badges and level up as you improve your emotional well-being.</p></div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-green-600 rounded-full p-3 mr-4"><i class="fas fa-heart text-white text-xl"></i></div>
+                        <div><h3 class="text-xl font-semibold mb-2">Wellness Activities</h3><p class="text-gray-300">Access curated meditation, yoga, and mindfulness exercises.</p></div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-purple-600 rounded-full p-3 mr-4"><i class="fas fa-chart-line text-white text-xl"></i></div>
+                        <div><h3 class="text-xl font-semibold mb-2">Progress Tracking</h3><p class="text-gray-300">Monitor your emotional journey with detailed analytics and insights.</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative">
+                <img src="{{ url_for('static', filename='images/wellness-bg.jpg') }}" alt="Wellness and Meditation" class="rounded-xl shadow-2xl">
+                <div class="absolute -bottom-6 -left-6 bg-blue-600 rounded-xl p-6 shadow-lg text-center">
+                    <div class="text-3xl font-bold mb-2">95%</div>
+                    <div class="text-blue-100">User Satisfaction</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="py-20 bg-blue-600 text-white">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-4xl font-bold mb-6">Ready to Start Your Emotional Wellness Journey?</h2>
+        <p class="text-xl mb-8 text-blue-100">
+            Join thousands of students and institutions using HEMANX for comprehensive emotional well-being monitoring.
+        </p>
+        <div class="space-x-4">
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.register') }}" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 transform hover:scale-105">
+                    Create Free Account
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold transition duration-300">
+                    Schedule Demo
+                </a>
+            {% else %}
+                <a href="{{ url_for('emotion.detection') }}" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 transform hover:scale-105">
+                    Start Emotion Analysis
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

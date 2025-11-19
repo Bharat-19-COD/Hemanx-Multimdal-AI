@@ -1,0 +1,52 @@
+# -----------------------------
+# Flask Framework
+# -----------------------------
+flask==3.0.3
+flask-pymongo==2.3.0
+flask-login==0.6.3
+flask-wtf==1.2.1
+wtforms==3.1.2
+python-dotenv==1.0.1
+bcrypt==4.1.2
+
+# -----------------------------
+# Core Numerical Computing
+# -----------------------------
+numpy
+
+# -----------------------------
+# Computer Vision
+# -----------------------------
+opencv-python==4.8.1.78
+pillow==10.2.0
+
+# -----------------------------
+# PyTorch + Transformers
+# -----------------------------
+torch==2.3.0
+torchvision==0.18.0
+torchaudio==2.3.0
+transformers==4.40.2
+tokenizers==0.19.1
+
+# -----------------------------
+# Audio Processing
+# -----------------------------
+librosa==0.10.2.post1
+soundfile==0.12.1
+pydub==0.25.1
+
+# -----------------------------
+# Google AI (Direct API - No LangChain)
+# -----------------------------
+google-generativeai==0.3.2
+tiktoken==0.7.0
+requests==2.31.0
+urllib3==2.2.2
+protobuf==3.20.3
+
+# -----------------------------
+# Additional dependencies
+# -----------------------------
+pydantic==2.7.1
+typing-extensions==4.11.0

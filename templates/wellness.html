@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Your Wellness Journey</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Personalized activities and recommendations for emotional well-being
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Personalized Recommendations -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift border border-green-100">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-gray-900">Personalized Recommendations</h2>
+                        <button id="refresh-recommendations" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-300 flex items-center">
+                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                        </button>
+                    </div>
+                    <div id="recommendations-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
+                            <p>Loading personalized recommendations...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wellness Activities -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift border border-blue-100">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Wellness Activities</h2>
+                    
+                    <!-- Meditation -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-spa text-purple-600 mr-2"></i>Meditation & Mindfulness
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {% for activity in activities.meditation %}
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h4 class="font-semibold text-gray-900">{{ activity.title }}</h4>
+                                    <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">{{ activity.duration }}</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3">{{ activity.description }}</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">{{ activity.difficulty }}</span>
+                                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm transition duration-300 play-activity" data-youtube-id="{{ activity.youtube_id }}">
+                                        <i class="fas fa-play mr-1"></i>Start
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Yoga -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-child text-green-600 mr-2"></i>Yoga & Movement
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {% for activity in activities.yoga %}
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h4 class="font-semibold text-gray-900">{{ activity.title }}</h4>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">{{ activity.duration }}</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3">{{ activity.description }}</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">{{ activity.difficulty }}</span>
+                                    <button class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition duration-300 play-activity" data-youtube-id="{{ activity.youtube_id }}">
+                                        <i class="fas fa-play mr-1"></i>Start
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Breathing -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-wind text-blue-600 mr-2"></i>Breathing Exercises
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {% for activity in activities.breathing %}
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h4 class="font-semibold text-gray-900">{{ activity.title }}</h4>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">{{ activity.duration }}</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3">{{ activity.description }}</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">{{ activity.difficulty }}</span>
+                                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition duration-300 play-activity" data-youtube-id="{{ activity.youtube_id }}">
+                                        <i class="fas fa-play mr-1"></i>Start
+                                    </button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Progress Stats -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift border border-yellow-100">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Your Progress</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Wellness Score</span>
+                                <span class="text-sm font-medium text-blue-600" id="wellness-score">75%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Activities Completed</span>
+                                <span class="text-sm font-medium text-green-600" id="activities-completed">12/20</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full transition-all duration-500" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Consistency</span>
+                                <span class="text-sm font-medium text-purple-600" id="consistency-score">85%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-purple-600 h-2 rounded-full transition-all duration-500" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <div class="flex items-center">
+                            <i class="fas fa-trophy text-yellow-600 text-xl mr-3"></i>
+                            <div>
+                                <p class="font-semibold text-yellow-800">Level <span id="user-level">{{ current_user.level }}</span></p>
+                                <p class="text-sm text-yellow-700">Keep going! You're making great progress.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift border border-purple-100">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Your Badges</h2>
+                    <div class="grid grid-cols-3 gap-4" id="badges-container">
+                        {% for badge in badges %}
+                        <div class="text-center group relative">
+                            <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-2 text-white text-2xl shadow-lg">
+                                {{ badge.icon }}
+                            </div>
+                            <p class="text-xs font-medium text-gray-900">{{ badge.name }}</p>
+                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-48">
+                                <div class="bg-gray-900 text-white text-xs rounded py-1 px-2">
+                                    {{ badge.description }}
+                                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Quick Tips -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift border border-blue-100">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Wellness Tips</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-start p-3 bg-blue-50 rounded-lg">
+                            <i class="fas fa-brain text-blue-600 mt-1 mr-3"></i>
+                            <p class="text-sm text-gray-700">Practice deep breathing for 2 minutes when feeling stressed</p>
+                        </div>
+                        <div class="flex items-start p-3 bg-green-50 rounded-lg">
+                            <i class="fas fa-walking text-green-600 mt-1 mr-3"></i>
+                            <p class="text-sm text-gray-700">Take a 5-minute walk every hour to refresh your mind</p>
+                        </div>
+                        <div class="flex items-start p-3 bg-purple-50 rounded-lg">
+                            <i class="fas fa-glass-cheers text-purple-600 mt-1 mr-3"></i>
+                            <p class="text-sm text-gray-700">Stay hydrated - drink at least 8 glasses of water daily</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- YouTube Modal -->
+        <div id="youtube-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg w-full max-w-4xl mx-4">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-lg font-semibold" id="modal-title">Wellness Activity</h3>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <div id="youtube-player" class="aspect-w-16 aspect-h-9"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+class WellnessManager {
+    constructor() {
+        this.initializeEventListeners();
+        this.loadPersonalizedRecommendations();
+        this.loadUserProgress();
+    }
+
+    initializeEventListeners() {
+        // Refresh recommendations
+        document.getElementById('refresh-recommendations')
+            .addEventListener('click', () => {
+                this.loadPersonalizedRecommendations();
+            });
+
+        // YouTube modal controls
+        document.getElementById('close-modal')
+            .addEventListener('click', () => {
+                this.closeYouTubePlayer();
+            });
+
+        document.getElementById('youtube-modal')
+            .addEventListener('click', (e) => {
+                if (e.target.id === 'youtube-modal') this.closeYouTubePlayer();
+            });
+
+        // Activity buttons
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('play-activity')) {
+                const youtubeId = e.target.dataset.youtubeId;
+                const activityTitle = e.target.closest('.border').querySelector('h4').textContent;
+                this.openYouTubePlayer(youtubeId, activityTitle);
+                this.markActivityComplete(e.target);
+            }
+        });
+    }
+
+    async loadPersonalizedRecommendations() {
+        try {
+            const response = await fetch('/wellness/api/personalized-recommendations');
+            const data = await response.json();
+            this.displayRecommendations(data.recommendations);
+        } catch (error) {
+            console.error('Failed to load recommendations:', error);
+            this.showNotification('Failed to load personalized recommendations', 'error');
+        }
+    }
+
+    displayRecommendations(recommendations) {
+        const container = document.getElementById('recommendations-container');
+        
+        if (!recommendations || recommendations.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-2 text-center py-8 text-gray-500">
+                    <i class="fas fa-heart text-2xl mb-3"></i>
+                    <p>No personalized recommendations available at the moment.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = recommendations.map(activity => `
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <h4 class="font-semibold text-gray-900">${activity.title}</h4>
+                    <span class="text-xs px-2 py-1 rounded ${
+                        activity.type === 'meditation' ? 'bg-purple-100 text-purple-800' :
+                        activity.type === 'yoga' ? 'bg-green-100 text-green-800' : 
+                        'bg-blue-100 text-blue-800'
+                    }">${activity.duration}</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">${activity.description}</p>
+                <div class="flex justify-between items-center">
+                    <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">${activity.difficulty}</span>
+                    <button class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition duration-300 play-activity" data-youtube-id="${activity.youtube_id}">
+                        <i class="fas fa-play mr-1"></i>Start
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async loadUserProgress() {
+        try {
+            const response = await fetch('/wellness/api/user-progress');
+            const data = await response.json();
+            this.updateProgressUI(data);
+        } catch (error) {
+            console.error('Failed to load user progress:', error);
+        }
+    }
+
+    updateProgressUI(data) {
+        // Update wellness score
+        document.getElementById('wellness-score').textContent = `${data.wellness_score}/10`;
+        document.querySelector('[style="width: 75%"]').style.width = `${data.wellness_score * 10}%`;
+
+        // Update activities completed
+        const activitiesCompleted = data.activities_completed || 0;
+        document.getElementById('activities-completed').textContent = `${activitiesCompleted}/20`;
+        document.querySelector('[style="width: 60%"]').style.width = `${(activitiesCompleted / 20) * 100}%`;
+
+        // Update consistency
+        const consistency = data.weekly_stats?.consistency_percentage || 0;
+        document.getElementById('consistency-score').textContent = `${Math.round(consistency)}%`;
+        document.querySelector('[style="width: 85%"]').style.width = `${consistency}%`;
+
+        // Update level
+        document.getElementById('user-level').textContent = data.level;
+
+        // Update badges
+        this.updateBadges(data.badges);
+    }
+
+    updateBadges(userBadges) {
+        const badgesContainer = document.getElementById('badges-container');
+        const allBadges = {{ badges|tojson }};
+        
+        badgesContainer.innerHTML = allBadges.map(badge => {
+            const hasBadge = userBadges.some(userBadge => userBadge.name === badge.name);
+            return `
+                <div class="text-center group relative ${!hasBadge ? 'opacity-40' : ''}">
+                    <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-2 text-white text-2xl shadow-lg">
+                        ${badge.icon}
+                    </div>
+                    <p class="text-xs font-medium text-gray-900">${badge.name}</p>
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-48 z-10">
+                        <div class="bg-gray-900 text-white text-xs rounded py-1 px-2">
+                            ${badge.description}
+                            ${!hasBadge ? '<br><small class="text-yellow-300">Not earned yet</small>' : ''}
+                            <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    openYouTubePlayer(youtubeId, title) {
+        const modal = document.getElementById('youtube-modal');
+        const player = document.getElementById('youtube-player');
+        const modalTitle = document.getElementById('modal-title');
+        
+        modalTitle.textContent = title;
+        player.innerHTML = `
+            <iframe 
+                width="100%" 
+                height="400" 
+                src="https://www.youtube.com/embed/${youtubeId}?autoplay=1" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        `;
+        
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeYouTubePlayer() {
+        const modal = document.getElementById('youtube-modal');
+        const player = document.getElementById('youtube-player');
+        
+        player.innerHTML = '';
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    async markActivityComplete(button) {
+        try {
+            const activityData = {
+                type: button.closest('.border').querySelector('h4').textContent.toLowerCase(),
+                duration: 10 // Default duration
+            };
+
+            const response = await fetch('/wellness/api/complete-activity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(activityData)
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                this.loadUserProgress(); // Refresh progress
+                this.showNotification('Activity completed! Keep up the great work!', 'success');
+            }
+        } catch (error) {
+            console.error('Failed to mark activity complete:', error);
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        // Simple notification implementation
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 bg-${type === 'error' ? 'red' : 'green'}-50 border border-${type === 'error' ? 'red' : 'green'}-200 rounded-lg p-4 z-50`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'} text-${type === 'error' ? 'red' : 'green'}-600 mr-3"></i>
+                <span class="text-${type === 'error' ? 'red' : 'green'}-800">${message}</span>
+                <button class="ml-4 text-${type === 'error' ? 'red' : 'green'}-600 hover:text-${type === 'error' ? 'red' : 'green'}-800" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new WellnessManager();
+});
+</script>
+{% endblock %}

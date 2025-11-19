@@ -1,0 +1,512 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Emotion Analysis</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Discover your emotional state through multiple analysis methods. 
+                Choose your preferred way to analyze emotions.
+            </p>
+        </div>
+
+        <!-- Analysis Methods Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <!-- Face Analysis Card -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover-lift border border-blue-100">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-camera text-blue-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Face Analysis</h3>
+                    <p class="text-gray-600">Real-time emotion detection using your camera</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div id="webcam-container" class="hidden">
+                        <div class="relative bg-gray-900 rounded-lg overflow-hidden">
+                            <video id="webcam" autoplay playsinline class="w-full h-48 object-cover"></video>
+                            <canvas id="canvas" class="absolute top-0 left-0 w-full h-48"></canvas>
+                            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                                <div id="emotion-indicator" class="bg-black bg-opacity-50 text-white px-4 py-2 rounded-full text-sm hidden">
+                                    <span id="current-emotion">Analyzing...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="webcam-controls" class="text-center">
+                        <button id="start-camera" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-300 flex items-center justify-center">
+                            <i class="fas fa-video mr-3"></i>
+                            Start Camera Analysis
+                        </button>
+                        <button id="stop-camera" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold transition duration-300 hidden mt-2">
+                            <i class="fas fa-stop mr-3"></i>
+                            Stop Camera
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Analysis Card -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover-lift border border-green-100">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-keyboard text-green-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Text Analysis</h3>
+                    <p class="text-gray-600">Analyze emotions from written text</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <textarea 
+                        id="text-input" 
+                        placeholder="How are you feeling today? Share your thoughts..."
+                        class="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    ></textarea>
+                    
+                    <button id="analyze-text" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-300">
+                        <i class="fas fa-search mr-3"></i>
+                        Analyze Text
+                    </button>
+                    
+                    <div id="text-result" class="hidden p-4 bg-green-50 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <span class="font-semibold text-green-800">Sentiment:</span>
+                            <span id="text-sentiment" class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm"></span>
+                        </div>
+                        <div class="mt-2 text-sm text-green-700" id="text-confidence"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Voice Analysis Card -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 hover-lift border border-purple-100">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-microphone text-purple-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Voice Analysis</h3>
+                    <p class="text-gray-600">Upload audio to detect emotional tone</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <i class="fas fa-cloud-upload-alt text-gray-400 text-3xl mb-3"></i>
+                        <p class="text-gray-600 mb-3">Upload audio file (MP3, WAV)</p>
+                        <input type="file" id="audio-file" accept="audio/*" class="hidden">
+                        <button id="browse-audio" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg text-sm">
+                            Browse Files
+                        </button>
+                        <div id="audio-filename" class="text-sm text-gray-500 mt-2 hidden"></div>
+                    </div>
+                    
+                    <button id="analyze-voice" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-300 disabled:opacity-50" disabled>
+                        <i class="fas fa-play mr-3"></i>
+                        Analyze Voice
+                    </button>
+                    
+                    <div id="voice-result" class="hidden p-4 bg-purple-50 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <span class="font-semibold text-purple-800">Emotion:</span>
+                            <span id="voice-emotion" class="bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-sm"></span>
+                        </div>
+                        <div class="mt-2 text-sm text-purple-700" id="voice-confidence"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Analysis Results -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Analysis</h2>
+            <div id="recent-results" class="space-y-4">
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-chart-line text-3xl mb-3"></i>
+                    <p>Your recent emotion analysis results will appear here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Emotion Results Modal -->
+<div id="results-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+        <div class="text-center">
+            <div id="result-emoji" class="text-6xl mb-4">😊</div>
+            <h3 id="result-title" class="text-2xl font-bold text-gray-900 mb-2">Analysis Complete</h3>
+            <p id="result-message" class="text-gray-600 mb-6">Your emotion has been analyzed successfully</p>
+            
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-700">Wellness Score:</span>
+                    <span id="result-score" class="font-bold text-blue-600">0/10</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="result-progress" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <button id="close-modal" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-300">
+                Continue Analysis
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+.hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+#webcam-container video {
+    transform: scaleX(-1); /* Mirror effect */
+}
+
+.emotion-pill {
+    transition: all 0.3s ease;
+}
+
+.emotion-pill:hover {
+    transform: scale(1.05);
+}
+
+/* Pulse animation for real-time analysis */
+.pulse-ring {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+</style>
+
+<script>
+class EmotionAnalyzer {
+    constructor() {
+        this.mediaStream = null;
+        this.isAnalyzing = false;
+        this.analysisInterval = null;
+        this.initializeEventListeners();
+        this.loadRecentResults();
+    }
+
+    initializeEventListeners() {
+        // Camera controls
+        document.getElementById('start-camera').addEventListener('click', () => this.startCamera());
+        document.getElementById('stop-camera').addEventListener('click', () => this.stopCamera());
+        
+        // Text analysis
+        document.getElementById('analyze-text').addEventListener('click', () => this.analyzeText());
+        
+        // Voice analysis
+        document.getElementById('browse-audio').addEventListener('click', () => document.getElementById('audio-file').click());
+        document.getElementById('audio-file').addEventListener('change', (e) => this.handleAudioSelect(e));
+        document.getElementById('analyze-voice').addEventListener('click', () => this.analyzeVoice());
+        
+        // Modal controls
+        document.getElementById('close-modal').addEventListener('click', () => this.closeResultsModal());
+        document.getElementById('results-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'results-modal') this.closeResultsModal();
+        });
+    }
+
+    async startCamera() {
+        try {
+            this.mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                video: { width: 640, height: 480 } 
+            });
+            
+            const video = document.getElementById('webcam');
+            video.srcObject = this.mediaStream;
+            
+            document.getElementById('webcam-container').classList.remove('hidden');
+            document.getElementById('start-camera').classList.add('hidden');
+            document.getElementById('stop-camera').classList.remove('hidden');
+            
+            this.startFaceAnalysis();
+            
+        } catch (error) {
+            this.showNotification('Camera access denied or not available', 'error');
+        }
+    }
+
+    stopCamera() {
+        if (this.mediaStream) {
+            this.mediaStream.getTracks().forEach(track => track.stop());
+            this.mediaStream = null;
+        }
+        
+        this.isAnalyzing = false;
+        if (this.analysisInterval) {
+            clearInterval(this.analysisInterval);
+        }
+        
+        document.getElementById('webcam-container').classList.add('hidden');
+        document.getElementById('start-camera').classList.remove('hidden');
+        document.getElementById('stop-camera').classList.add('hidden');
+        document.getElementById('emotion-indicator').classList.add('hidden');
+    }
+
+    startFaceAnalysis() {
+        this.isAnalyzing = true;
+        this.analysisInterval = setInterval(() => {
+            this.captureAndAnalyzeFrame();
+        }, 3000); // Analyze every 3 seconds
+    }
+
+    async captureAndAnalyzeFrame() {
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        const imageData = canvas.toDataURL('image/jpeg');
+        
+        try {
+            const response = await fetch('/emotion/analyze/face', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageData })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.updateEmotionIndicator(result.dominant_emotion, result.wellness_score);
+                this.showResultsModal(result.dominant_emotion, result.wellness_score, 'face');
+                this.loadRecentResults();
+            }
+        } catch (error) {
+            console.error('Face analysis error:', error);
+        }
+    }
+
+    updateEmotionIndicator(emotion, score) {
+        const indicator = document.getElementById('emotion-indicator');
+        const emotionText = document.getElementById('current-emotion');
+        
+        emotionText.textContent = `${emotion.charAt(0).toUpperCase() + emotion.slice(1)} • ${score}/10`;
+        indicator.classList.remove('hidden');
+        
+        // Add pulse animation
+        indicator.classList.add('pulse-ring');
+    }
+
+    async analyzeText() {
+        const text = document.getElementById('text-input').value.trim();
+        
+        if (!text) {
+            this.showNotification('Please enter some text to analyze', 'error');
+            return;
+        }
+        
+        document.getElementById('analyze-text').disabled = true;
+        document.getElementById('analyze-text').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Analyzing...';
+        
+        try {
+            const response = await fetch('/emotion/analyze/text', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.displayTextResult(result);
+                this.showResultsModal(result.sentiment, result.wellness_score, 'text');
+                this.loadRecentResults();
+            } else {
+                this.showNotification(result.error || 'Text analysis failed', 'error');
+            }
+        } catch (error) {
+            this.showNotification('Network error occurred', 'error');
+        } finally {
+            document.getElementById('analyze-text').disabled = false;
+            document.getElementById('analyze-text').innerHTML = '<i class="fas fa-search mr-3"></i>Analyze Text';
+        }
+    }
+
+    displayTextResult(result) {
+        const resultDiv = document.getElementById('text-result');
+        const sentiment = document.getElementById('text-sentiment');
+        const confidence = document.getElementById('text-confidence');
+        
+        sentiment.textContent = result.sentiment.charAt(0).toUpperCase() + result.sentiment.slice(1);
+        confidence.textContent = `Confidence: ${(result.confidence * 100).toFixed(1)}%`;
+        resultDiv.classList.remove('hidden');
+    }
+
+    handleAudioSelect(event) {
+        const file = event.target.files[0];
+        if (file) {
+            document.getElementById('audio-filename').textContent = file.name;
+            document.getElementById('audio-filename').classList.remove('hidden');
+            document.getElementById('analyze-voice').disabled = false;
+        }
+    }
+
+    async analyzeVoice() {
+        const fileInput = document.getElementById('audio-file');
+        if (!fileInput.files.length) {
+            this.showNotification('Please select an audio file', 'error');
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('audio', fileInput.files[0]);
+        
+        document.getElementById('analyze-voice').disabled = true;
+        document.getElementById('analyze-voice').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Analyzing...';
+        
+        try {
+            const response = await fetch('/emotion/analyze/voice', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.displayVoiceResult(result);
+                this.showResultsModal(result.dominant_emotion, result.wellness_score, 'voice');
+                this.loadRecentResults();
+            } else {
+                this.showNotification(result.error || 'Voice analysis failed', 'error');
+            }
+        } catch (error) {
+            this.showNotification('Network error occurred', 'error');
+        } finally {
+            document.getElementById('analyze-voice').disabled = false;
+            document.getElementById('analyze-voice').innerHTML = '<i class="fas fa-play mr-3"></i>Analyze Voice';
+        }
+    }
+
+    displayVoiceResult(result) {
+        const resultDiv = document.getElementById('voice-result');
+        const emotion = document.getElementById('voice-emotion');
+        const confidence = document.getElementById('voice-confidence');
+        
+        emotion.textContent = result.dominant_emotion.charAt(0).toUpperCase() + result.dominant_emotion.slice(1);
+        confidence.textContent = `Confidence: ${Math.max(...Object.values(result.emotions)) * 100}%`;
+        resultDiv.classList.remove('hidden');
+    }
+
+    showResultsModal(emotion, score, type) {
+        const modal = document.getElementById('results-modal');
+        const emoji = document.getElementById('result-emoji');
+        const title = document.getElementById('result-title');
+        const message = document.getElementById('result-message');
+        const resultScore = document.getElementById('result-score');
+        const progress = document.getElementById('result-progress');
+        
+        // Set emoji based on emotion
+        const emojiMap = {
+            'happy': '😊', 'sad': '😢', 'angry': '😠', 'fear': '😨',
+            'surprise': '😲', 'neutral': '😐', 'positive': '👍', 'negative': '👎'
+        };
+        
+        emoji.textContent = emojiMap[emotion.toLowerCase()] || '😊';
+        title.textContent = `${emotion.charAt(0).toUpperCase() + emotion.slice(1)} Detected`;
+        message.textContent = `Your ${type} analysis shows ${emotion} emotion`;
+        resultScore.textContent = `${score}/10`;
+        progress.style.width = `${score * 10}%`;
+        
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeResultsModal() {
+        document.getElementById('results-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    async loadRecentResults() {
+        try {
+            const response = await fetch('/emotion/recent?limit=5');
+            const result = await response.json();
+            
+            if (result.success) {
+                this.displayRecentResults(result.emotions);
+            }
+        } catch (error) {
+            console.error('Failed to load recent results:', error);
+        }
+    }
+
+    displayRecentResults(emotions) {
+        const container = document.getElementById('recent-results');
+        
+        if (emotions.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-chart-line text-3xl mb-3"></i>
+                    <p>Your recent emotion analysis results will appear here</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = emotions.map(emotion => `
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-300">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-${this.getAnalysisIcon(emotion.analysis_type)} text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 capitalize">${emotion.dominant_emotion}</h4>
+                        <p class="text-sm text-gray-600">${this.formatTimestamp(emotion.timestamp)} • ${emotion.analysis_type}</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                        ${emotion.wellness_score}/10
+                    </span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    getAnalysisIcon(type) {
+        const icons = {
+            'face': 'camera',
+            'text': 'keyboard', 
+            'voice': 'microphone'
+        };
+        return icons[type] || 'chart-line';
+    }
+
+    formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+        });
+    }
+
+    showNotification(message, type = 'info') {
+        // Simple notification implementation
+        alert(`${type.toUpperCase()}: ${message}`);
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new EmotionAnalyzer();
+});
+</script>
+{% endblock %}

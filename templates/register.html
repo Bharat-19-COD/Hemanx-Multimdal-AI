@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="mx-auto w-20 h-20 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                <i class="fas fa-user-plus text-white text-2xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900">Create Account</h2>
+            <p class="mt-2 text-gray-600">Join HEMANX and start your emotional wellness journey</p>
+        </div>
+
+        <!-- Register Form -->
+        <form class="mt-8 space-y-6 bg-white p-8 rounded-2xl shadow-xl hover-lift border border-gray-100" method="POST" action="{{ url_for('auth.register') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="space-y-4">
+                <!-- Full Name -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-user text-gray-400"></i>
+                        </div>
+                        <input 
+                            id="name" 
+                            name="name" 
+                            type="text" 
+                            autocomplete="name" 
+                            required 
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-300"
+                            placeholder="Enter your full name"
+                        >
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope text-gray-400"></i>
+                        </div>
+                        <input 
+                            id="email" 
+                            name="email" 
+                            type="email" 
+                            autocomplete="email" 
+                            required 
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-300"
+                            placeholder="Enter your email"
+                        >
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input 
+                            id="password" 
+                            name="password" 
+                            type="password" 
+                            autocomplete="new-password" 
+                            required 
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-300"
+                            placeholder="Create a password"
+                        >
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" onclick="togglePassword()">
+                            <i class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
+                        </button>
+                    </div>
+                    <div id="password-strength" class="mt-2 hidden">
+                        <div class="flex items-center space-x-2">
+                            <div id="strength-bar" class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="strength-progress" class="h-full transition-all duration-500"></div>
+                            </div>
+                            <span id="strength-text" class="text-xs font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role Selection -->
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700 mb-2">I am a</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="relative flex cursor-pointer">
+                            <input type="radio" name="role" value="student" class="sr-only" checked>
+                            <div class="flex items-center justify-center w-full py-3 px-4 border border-gray-300 rounded-lg hover:border-green-500 transition duration-300 peer-checked:border-green-500 peer-checked:bg-green-50">
+                                <i class="fas fa-graduation-cap text-gray-400 mr-2 peer-checked:text-green-600"></i>
+                                <span class="text-sm font-medium text-gray-700 peer-checked:text-green-700">Student</span>
+                            </div>
+                        </label>
+                        <label class="relative flex cursor-pointer">
+                            <input type="radio" name="role" value="admin" class="sr-only">
+                            <div class="flex items-center justify-center w-full py-3 px-4 border border-gray-300 rounded-lg hover:border-green-500 transition duration-300 peer-checked:border-green-500 peer-checked:bg-green-50">
+                                <i class="fas fa-cog text-gray-400 mr-2 peer-checked:text-green-600"></i>
+                                <span class="text-sm font-medium text-gray-700 peer-checked:text-green-700">Admin</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Terms Agreement -->
+                <div class="flex items-center">
+                    <input id="terms" name="terms" type="checkbox" required class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                    <label for="terms" class="ml-2 block text-sm text-gray-700">
+                        I agree to the 
+                        <a href="#" class="text-green-600 hover:text-green-500 font-medium">Terms of Service</a> 
+                        and 
+                        <a href="#" class="text-green-600 hover:text-green-500 font-medium">Privacy Policy</a>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-300 transform hover:scale-105">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <i class="fas fa-user-plus text-green-300 group-hover:text-green-200"></i>
+                    </span>
+                    Create Account
+                </button>
+            </div>
+
+            <!-- Login Link -->
+            <div class="text-center">
+                <span class="text-sm text-gray-600">Already have an account? 
+                    <a href="{{ url_for('auth.login') }}" class="font-medium text-green-600 hover:text-green-500 transition duration-300">Sign in here</a>
+                </span>
+            </div>
+        </form>
+
+        <!-- Features -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <i class="fas fa-brain text-green-600 text-xl mb-2"></i>
+                <p class="text-xs text-gray-600">AI Emotion Analysis</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <i class="fas fa-chart-line text-blue-600 text-xl mb-2"></i>
+                <p class="text-xs text-gray-600">Progress Tracking</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <i class="fas fa-spa text-purple-600 text-xl mb-2"></i>
+                <p class="text-xs text-gray-600">Wellness Activities</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.querySelector('#password + button i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.className = 'fas fa-eye-slash text-gray-400 hover:text-gray-600';
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.className = 'fas fa-eye text-gray-400 hover:text-gray-600';
+    }
+}
+
+// Password strength indicator
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('password');
+    const strengthDiv = document.getElementById('password-strength');
+    const strengthProgress = document.getElementById('strength-progress');
+    const strengthText = document.getElementById('strength-text');
+    
+    passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        const strength = calculatePasswordStrength(password);
+        
+        if (password.length > 0) {
+            strengthDiv.classList.remove('hidden');
+            
+            // Update progress bar
+            strengthProgress.style.width = `${strength.percentage}%`;
+            strengthProgress.className = `h-full transition-all duration-500 ${strength.color}`;
+            
+            // Update text
+            strengthText.textContent = strength.text;
+            strengthText.className = `text-xs font-medium ${strength.textColor}`;
+        } else {
+            strengthDiv.classList.add('hidden');
+        }
+    });
+    
+    function calculatePasswordStrength(password) {
+        let score = 0;
+        
+        // Length check
+        if (password.length >= 8) score += 25;
+        if (password.length >= 12) score += 15;
+        
+        // Character variety
+        if (/[a-z]/.test(password)) score += 10;
+        if (/[A-Z]/.test(password)) score += 15;
+        if (/[0-9]/.test(password)) score += 15;
+        if (/[^a-zA-Z0-9]/.test(password)) score += 20;
+        
+        score = Math.min(score, 100);
+        
+        if (score < 40) {
+            return { percentage: score, color: 'bg-red-500', text: 'Weak', textColor: 'text-red-600' };
+        } else if (score < 70) {
+            return { percentage: score, color: 'bg-yellow-500', text: 'Fair', textColor: 'text-yellow-600' };
+        } else if (score < 90) {
+            return { percentage: score, color: 'bg-blue-500', text: 'Good', textColor: 'text-blue-600' };
+        } else {
+            return { percentage: score, color: 'bg-green-500', text: 'Strong', textColor: 'text-green-600' };
+        }
+    }
+    
+    // Form validation
+    const form = document.querySelector('form');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const termsCheckbox = document.getElementById('terms');
+    
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Name validation
+        if (!nameInput.value.trim()) {
+            showNotification('Please enter your full name', 'error');
+            isValid = false;
+        }
+        
+        // Email validation
+        if (!emailInput.value.trim()) {
+            showNotification('Please enter your email address', 'error');
+            isValid = false;
+        } else if (!isValidEmail(emailInput.value)) {
+            showNotification('Please enter a valid email address', 'error');
+            isValid = false;
+        }
+        
+        // Password validation
+        if (!passwordInput.value) {
+            showNotification('Please enter your password', 'error');
+            isValid = false;
+        } else if (passwordInput.value.length < 6) {
+            showNotification('Password must be at least 6 characters long', 'error');
+            isValid = false;
+        }
+        
+        // Terms agreement
+        if (!termsCheckbox.checked) {
+            showNotification('Please agree to the terms and conditions', 'error');
+            isValid = false;
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+    
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    function showNotification(message, type) {
+        // Simple notification implementation
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 bg-${type === 'error' ? 'red' : 'green'}-50 border border-${type === 'error' ? 'red' : 'green'}-200 rounded-lg p-4 z-50 notification`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'} text-${type === 'error' ? 'red' : 'green'}-600 mr-3"></i>
+                <span class="text-${type === 'error' ? 'red' : 'green'}-800">${message}</span>
+                <button class="ml-4 text-${type === 'error' ? 'red' : 'green'}-600 hover:text-${type === 'error' ? 'red' : 'green'}-800" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+});
+</script>
+{% endblock %}
