@@ -14,11 +14,6 @@ class User(UserMixin):
         self.badges = user_data.get('badges', [])
         self.level = user_data.get('level', 1)
         self.wellness_score = user_data.get('wellness_score', 0)
-        
-        # Remove is_active from initialization to avoid conflicts
-
-    # Flask-Login will handle these properties automatically
-    # Don't define is_active, is_authenticated, is_anonymous as properties
 
     @staticmethod
     def validate_email(email):
