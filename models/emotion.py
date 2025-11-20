@@ -12,14 +12,14 @@ class EmotionData:
         self._id = data.get('_id')
 
     @staticmethod
-    def create(db, user_id, emotion_type, emotion_data, mood_score=0):
+    def create_emotion_record(db, user_id, emotion_type, emotion_data):
         """Create a new emotion data entry"""
         try:
             emotion_entry = {
                 'user_id': ObjectId(user_id),
                 'emotion_type': emotion_type,
                 'data': emotion_data,
-                'mood_score': mood_score,
+                'mood_score': emotion_data.get('wellness_score', 0),
                 'timestamp': datetime.utcnow()
             }
             
@@ -28,6 +28,24 @@ class EmotionData:
         except Exception as e:
             print(f"Error creating emotion data: {e}")
             return None
+    
+    @staticmethod
+    def get_recent_emotions(db, user_id, limit=10):
+        """Get recent emotion records for a user"""
+        try:
+            query = {'user_id': ObjectId(user_id)}
+            cursor = db.emotion_data.find(query).sort('timestamp', -1).limit(limit)
+            emotions = list(cursor)
+            
+            # Convert ObjectId to string for JSON serialization
+            for emotion in emotions:
+                emotion['_id'] = str(emotion['_id'])
+                emotion['user_id'] = str(emotion['user_id'])
+                
+            return emotions
+        except Exception as e:
+            print(f"Error getting recent emotions: {e}")
+            return []
 
     @staticmethod
     def get_user_emotions(db, user_id, limit=10, emotion_type=None):
@@ -153,5 +171,5 @@ class SimpleEmotionData:
             print(f"Error getting wellness progress: {e}")
             return {}
 
-# Create alias for backward compatibility
+# Use SimpleEmotionData as the main EmotionData class
 EmotionData = SimpleEmotionData

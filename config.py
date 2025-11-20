@@ -6,10 +6,11 @@ class Config:
     MONGO_URI = os.environ.get('MONGO_URI') or 'mongodb://localhost:27017/emotion_wellness'
     UPLOAD_FOLDER = 'uploads'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'wav', 'mp3', 'm4a', 'webm'}
     
     # Model configurations
-    FACE_MODEL = "deepface"
-    TEXT_MODEL = "cardiffnlp/twitter-roberta-base-sentiment-latest"
+    FACE_MODEL = "opencv"  # Using OpenCV for face detection
+    TEXT_MODEL = "j-hartmann/emotion-english-distilroberta-base"
     VOICE_MODEL = "superb/wav2vec2-base-superb-er"
     
     # Google Generative AI configuration

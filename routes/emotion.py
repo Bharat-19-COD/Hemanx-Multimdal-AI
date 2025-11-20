@@ -369,7 +369,7 @@ def analyze_voice():
             return jsonify({'success': False, 'error': 'No audio file provided'})
         
         audio_file = request.files['audio']
-        if allowed_file(audio_file.filename, {'wav', 'mp3', 'm4a', 'webm'}):
+        if allowed_file(audio_file.filename):
             filepath = save_upload(audio_file)
             if filepath:
                 try:
@@ -445,7 +445,7 @@ def analyze_comprehensive():
         # Analyze voice if provided
         if 'audio' in request.files and request.files['audio'].filename:
             audio_file = request.files['audio']
-            if allowed_file(audio_file.filename, {'wav', 'mp3', 'm4a'}):
+            if allowed_file(audio_file.filename):
                 filepath = save_upload(audio_file)
                 if filepath:
                     voice_result = analyze_audio_file(filepath)

@@ -5,10 +5,7 @@ from datetime import datetime, timedelta
 
 wellness_bp = Blueprint('wellness', __name__)
 recommender = WellnessRecommender()
-# In each route file, include this function:
-def get_db():
-    from app import mongo
-    return mongo.db
+
 # Use a function to get the database connection to avoid circular imports
 def get_db():
     from app import mongo
